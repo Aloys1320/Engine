@@ -1,9 +1,9 @@
 #version 430
-
+in vec2 fragUV;
 void main()
 
 {
 
-gl_FragColor = vec4(1,0,0,1);
+gl_FragColor = vec4(fragUV,0,1);
 
 }
