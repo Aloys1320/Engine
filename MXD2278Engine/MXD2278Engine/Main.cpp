@@ -2,11 +2,11 @@
 
 int main() {
 	Engine engine = Engine();
-	
+
 	if (!engine.init())
 		return -1;
 
-	if (!engine.bufferModel())
+	if (!engine.bufferModels())
 		return -1;
 
 	//Create clear color

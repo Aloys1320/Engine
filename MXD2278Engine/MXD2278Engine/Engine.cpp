@@ -1,13 +1,14 @@
 #include "Engine.h"
 
-
 bool Engine::gameLoop()
-{	
+{
+
 	//Game Loop
 	while (!glfwWindowShouldClose(GLFWwindowPtr)) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 		glClear(GL_COLOR_BUFFER_BIT);
-		glBindVertexArray(vertArr);
-		glDrawArrays(GL_TRIANGLES, 0, vertCount);
+		model.render();
 		glBindVertexArray(0);
 		glfwSwapBuffers(GLFWwindowPtr);
 		glfwPollEvents();
@@ -39,33 +40,11 @@ bool Engine::init()
 	return true;
 }
 
-bool Engine::bufferModel()
+bool Engine::bufferModels()
 {	
-	//Create Quad
-	std::vector<glm::vec3> locs = {
-		{ .9,.9,0 },		//top Right
-		{ -.9,.9,0 },		//Top Left
-		{ -.9,-.9,0 },	//Bottom Left
-		{ .9,-.9,0 } };	//Bottom Right
-	std::vector<unsigned int> locInds = { 0,1,2,0,2,3 };
-	vertCount = locInds.size();
-	std::vector<glm::vec3> vertBufData(vertCount);
-	for (unsigned int i = 0; i < vertCount; i++) {
-		vertBufData[i] = locs[locInds[i]];
-	}
-
-	//Create & Bind buffer
-
-	glGenVertexArrays(1, &vertArr);
-	glGenBuffers(1, &vertBuf);
-	glBindVertexArray(vertArr);
-	glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*vertCount, &vertBufData[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-	glBindVertexArray(0);
-	return true;
+	if (model.buffer("models/sphere.obj"))
+		return true;
+	return false;
 }
 
 bool Engine::useShaders()

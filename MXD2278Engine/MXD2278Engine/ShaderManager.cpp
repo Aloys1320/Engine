@@ -1,7 +1,7 @@
 #include "ShaderManager.h"
 
 
-using namespace std;
+
 GLuint ShaderManager::getprogram() const
 {
 	return program;
@@ -35,46 +35,51 @@ bool ShaderManager::loadShaders(const char * vertexFile, const char * fragmentFi
 	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
 	GLchar* logArray = new GLchar[logLength+1];
 	glGetProgramInfoLog(program, logLength, 0, logArray);
-	cout << logArray << endl;
+	std::cout << logArray << std::endl;
 	glDeleteShader(program);
 	delete[] logArray;
 	return false;
 }
 
+//Helper Method to open and read shaders.
 GLuint ShaderManager::loadShader(const char * file, GLenum shaderType)
 {
 	GLuint shaderIndex;
 	int fileLength;
 	char* fileContents;
-	ifstream inFile(file, std::ios::binary);
+	//Read in the file in binary
+	std::ifstream inFile(file, std::ios::binary);
 	if (inFile.is_open()) {
-		inFile.seekg(0, ios::end);
+		inFile.seekg(0, std::ios::end);
 		fileLength = (int)inFile.tellg();
-		inFile.seekg(0, ios::beg);
+		inFile.seekg(0, std::ios::beg);
 		fileContents = new char[fileLength + 1];
 		inFile.read(fileContents, fileLength);
 		fileContents[fileLength] = 0;
 		inFile.close();
 	}
+	//If file was not found/read properly, output the error and close.
 	else {
-		cout << "Error Opening or Reading File." << endl;
+		std::cout << "Error Opening or Reading File." << std::endl;
 		return 0;
 	}
 	shaderIndex = glCreateShader(shaderType);
 	glShaderSource(shaderIndex,1,&fileContents,0);
 	glCompileShader(shaderIndex);
 	delete[] fileContents;
+	//Get result of shader creation.
 	GLint result;
 	glGetShaderiv(shaderIndex,GL_COMPILE_STATUS,&result);
 	if (result != 0) {
 		return shaderIndex;
 	}
+	//If shader failed, print out error and return 0
 	GLint logLength;
 	glGetShaderiv(shaderIndex, GL_INFO_LOG_LENGTH, &logLength);
 	GLchar* logArray = new GLchar[logLength];
 	glGetShaderInfoLog(shaderIndex, logLength, 0, logArray);
 	glDeleteShader(shaderIndex);
-	cout << logArray << endl;
+	std::cout << logArray << std::endl;
 	delete[] logArray;
 	return 0;
 }

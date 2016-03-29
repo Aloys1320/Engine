@@ -6,21 +6,21 @@
 #include <FreeImage.h>
 #include <vector>
 #include "ShaderManager.h"
+#include "Model.h"
+
 class Engine
 {
 private:
 	GLFWwindow* GLFWwindowPtr;
-	GLuint vertArr;
-	GLuint vertBuf;
-	unsigned int vertCount;
 	ShaderManager shaderManager;
+	Model model;
 public:
 	//Attributes
 
 	//Methods
 	bool gameLoop();
 	bool init();
-	bool bufferModel();
+	bool bufferModels();
 	bool useShaders();
 	Engine();
 	~Engine();
