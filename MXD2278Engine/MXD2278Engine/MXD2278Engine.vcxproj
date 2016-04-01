@@ -71,19 +71,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\glm\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\lib;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\lib;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>glm\include;GLFW\include;GLEW\include;FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>GLFW\lib;GLEW\lib;FreeImage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\glm\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\FreeImage\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\GLEW\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\GLFW\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\glm\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\include;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\lib;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\lib;H:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>glm\include;GLFW\include;GLEW\include;FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>GLFW\lib;GLEW\lib;FreeImage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\glm\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\FreeImage\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\GLEW\include;\\banner.main.ad.rit.edu\students\mxd2278\IGMProfile\Documents\Engine\MXD2278Engine\MXD2278Engine\GLFW\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,11 +158,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

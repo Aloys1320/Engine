@@ -1,9 +1,11 @@
 #version 430
+
+uniform sampler2D myTexture;
 in vec2 fragUV;
 void main()
 
 {
 
-gl_FragColor = vec4(fragUV,0,1);
+gl_FragColor = texture(myTexture,fragUV);
 
 }
