@@ -1,16 +1,9 @@
 #include "Texture.h"
 
-
-
-
-
-Texture::Texture()
-{
-}
-
-Texture::Texture(char* filePath) {
-	//Load Texture
-	FIBITMAP* image = FreeImage_Load(FreeImage_GetFileType(filePath, 0), filePath);
+//Load a texture and assign a GLuint as a reference.
+GLuint Texture::loadTexture(char * texturePath)
+{	//Load Texture
+	FIBITMAP* image = FreeImage_Load(FreeImage_GetFileType(texturePath, 0), texturePath);
 	if (image == nullptr);
 	FIBITMAP* image32Bit = FreeImage_ConvertTo32Bits(image);
 	FreeImage_Unload(image);
@@ -22,6 +15,11 @@ Texture::Texture(char* filePath) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	FreeImage_Unload(image32Bit);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	return texId;
+}
+
+Texture::Texture()
+{
 }
 
 Texture::~Texture()

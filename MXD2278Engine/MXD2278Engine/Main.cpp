@@ -11,6 +11,8 @@ int main() {
 
 	//Create clear color
 	glClearColor(.392f, .584f, .929f, 1.0f);
+
+	//Begin the game loop if the shaders loaded correctly
 	if(engine.useShaders())
 		engine.gameLoop();
 

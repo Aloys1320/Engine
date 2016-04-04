@@ -11,8 +11,8 @@ class Texture
 {
 public:
 	GLuint texId;
+	GLuint loadTexture(char* );
 	Texture();
-	Texture(char* filePath);
 	~Texture();
 };
 

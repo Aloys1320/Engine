@@ -8,12 +8,14 @@
 #include "ShaderManager.h"
 #include "Model.h"
 #include "Texture.h"
+#include <map>
+#include <list>
 class Engine
 {
 private:
 	GLFWwindow* GLFWwindowPtr;
 	ShaderManager shaderManager;
-	Model model;
+	Model sphere;
 public:
 	//Attributes
 

@@ -1,6 +1,4 @@
 #include "Engine.h"
-#include <map>
-#include <list>
 namespace {
 	std::map<int, bool> keyIsDown;
 	std::map<int, bool> keyWasDown;
@@ -11,42 +9,52 @@ void mouseClick(GLFWwindow * windowPtr, int button, int action, int mods) {
 void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mods) {
 	keyIsDown[key] = action;
 }
+
+//Main Engine Loop
 bool Engine::gameLoop()
 {
-
+	
 	//Use functions
 	glfwSetMouseButtonCallback(GLFWwindowPtr, mouseClick);
 	glfwSetKeyCallback(GLFWwindowPtr, keyCallback);
 
-	//Create vector of textures
+	//Create vector of texture reference
 	int textureIds = 0;
-	std::vector<Texture> textures = std::vector<Texture>();
-
-	//Assign textures to vector
-	textures.push_back(Texture("textures/TestTexture.png"));
-	textures.push_back(Texture("textures/wall.jpg"));
-	textures.push_back(Texture("textures/dome.png"));
-	textures.push_back(Texture("textures/rain.png"));
+	//texture map
+	std::map<int, GLuint> textures = std::map<int,GLuint>();
+	Texture textureLoader = Texture();
+	//Assign textures to map w/ coresponding reference
+	textures[0]=(textureLoader.loadTexture("textures/TestTexture.png"));
+	textures[1]=(textureLoader.loadTexture("textures/wall.jpg"));
+	textures[2]=(textureLoader.loadTexture("textures/dome.png"));
+	textures[3]=(textureLoader.loadTexture("textures/rain.png"));
 
 	//Game Loop
 	while (!glfwWindowShouldClose(GLFWwindowPtr)) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		keyWasDown = keyIsDown;
 
-		glfwPollEvents();
 
+		//Escape exits program
 		if (keyIsDown[GLFW_KEY_ESCAPE])
 			glfwSetWindowShouldClose(GLFWwindowPtr, GL_TRUE);
+		
+		//Detect mouse button 1 input (updates textures)
 		if (keyIsDown[GLFW_MOUSE_BUTTON_1] && !keyWasDown[GLFW_MOUSE_BUTTON_1]) {
 			textureIds++;
 			textureIds = textureIds % textures.size();
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
-		glBindTexture(GL_TEXTURE_2D, textures[textureIds].texId);
-		model.render();
+		glBindTexture(GL_TEXTURE_2D, textures[textureIds]);
+		sphere.render();
 		glBindVertexArray(0);
 		glfwSwapBuffers(GLFWwindowPtr);
+
+
+		//Update old keypresses 
+		keyWasDown = keyIsDown;
+		//Get key updates
+		glfwPollEvents();
 	}
 	glfwTerminate();
 	return true;
@@ -75,13 +83,15 @@ bool Engine::init()
 	return true;
 }
 
+//Buffer the models using the modelclass.
 bool Engine::bufferModels()
 {	
-	if (model.buffer("models/sphere.obj"))
+	if (sphere.buffer("models/sphere.obj"))
 		return true;
 	return false;
 }
 
+//Uses the shadersthat are declared
 bool Engine::useShaders()
 {
 	if (shaderManager.loadShaders("shaders/vShader.glsl", "shaders/fShader.glsl")) {
