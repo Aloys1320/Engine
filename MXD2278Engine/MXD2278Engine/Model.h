@@ -4,21 +4,26 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <FreeImage.h>
-#include <vector>
-#include <fstream>
-#include <iostream>
 #include <string>
-#include <sstream>
+#include <map>
+#include "Texture.h"
+
 class Model
 {
 private:
+	std::map <int, GLuint> textures;
+	Texture textureManager;
+	int textureIds;
 	unsigned int vertCount;
 	GLuint vertArr;
-
+	char* filePath;
 public:
+	char* getFilePath();
 	bool buffer(std::string objFile);
 	void render();
+	void updateTexture();
 	Model();
+	Model(char* filePath);
 	~Model();
 };
 

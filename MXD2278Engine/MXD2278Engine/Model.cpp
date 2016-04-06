@@ -1,17 +1,32 @@
 #include "Model.h"
-
-
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <cmath>
 using std::ifstream;
-bool Model::buffer(std::string objFile) {
 
+//Public Getter to return the models's path
+char * Model::getFilePath()
+{
+	return filePath;
+}
+
+//Method that instantiates the model. This should load all textures, open the model file and parse, and bind the coresponding vectors. false if fails.
+bool Model::buffer(std::string objFile) {
+	//Declare texture Files
+	textures[0] = (textureManager.loadTexture("textures/TestTexture.png"));
+	textures[1] = (textureManager.loadTexture("textures/wall.jpg"));
+	textures[2] = (textureManager.loadTexture("textures/dome.png"));
+	textures[3] = (textureManager.loadTexture("textures/rain.png"));
+
+	//Declare vectors
 	std::vector<glm::vec3> locs;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> norms;
 	std::vector<VertInd> vertInds;
 	//Try to open file
-	try {
-		ifstream inFile;
-		inFile.open(objFile);
+	ifstream inFile(objFile);
+	if(inFile){
 		std::string line;
 		//While the next line of the file is not empty (file still has good data)
 		while (std::getline(inFile, line)) {
@@ -50,8 +65,8 @@ bool Model::buffer(std::string objFile) {
 		}
 		inFile.close();
 	}
-	catch (ifstream::failure e) {
-		std::cout << "Error opening or reading file." << std::endl;
+	else{
+		std::cout << "Error opening or reading file. File "<<objFile<<" was not found or was unable to be opened." << std::endl;
 		return 0;
 	}
 
@@ -73,24 +88,60 @@ bool Model::buffer(std::string objFile) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertCount, &vertBufData[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);													//Step of vertex size, offset of 0
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec3)));						//Step of vertex size, offset of size of 1 vec3 (location info)
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)((sizeof(glm::vec3))+sizeof(glm::vec2)));	//Step of vertex size, offset of size of 1 vec3 and 1 vec 2 (location and uv info)
 	glBindVertexArray(0);
+
 	return true;
 }
 
+//Basic render method that will render models with their textures, then unbind the textures.
 void Model::render()
 {
+	glBindTexture(GL_TEXTURE_2D, textures[textureIds]);
 	glBindVertexArray(vertArr);
 	glDrawArrays(GL_TRIANGLES, 0, vertCount);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
+//Method to update which texture the model should show.
+void Model::updateTexture() {
+	std::cout << "Updating textures" << std::endl;
+	textureIds++;
+	textureIds = textureIds % textures.size();
+	std::cout << "Now rendering model with texture: " << textures[textureIds] << std::endl;
+
 }
 
 Model::Model()
 {
+	textureIds = 0;
+	textures = std::map<int, GLuint>();
+	textureManager = Texture();
 	vertCount = 0;
 	vertArr = 0;
+}
+
+Model::Model(char * _filePath)
+{
+	textureIds = 0;
+	textures = std::map<int, GLuint>();
+	textureManager = Texture();
+	vertCount = 0;
+	vertArr = 0;
+	filePath = _filePath;
 }
 
 
 Model::~Model()
 {
+	for (int i = 0; i < textures.size(); i++)
+	{
+		glDeleteTextures(1, &textures[i]);
+	}
 }

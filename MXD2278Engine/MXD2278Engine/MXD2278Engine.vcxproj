@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>glm\include;GLFW\include;GLEW\include;FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>GLFW\lib;GLEW\lib;FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\glm\include;$(ProjectDir)\GLFW\include;$(ProjectDir)\GLEW\include;$(ProjectDir)\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\GLFW\lib;$(ProjectDir)\GLEW\lib;$(ProjectDir)\FreeImage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>glm\include;GLFW\include;GLEW\include;FreeImage\include;$(IncludePath)</IncludePath>
-    <LibraryPath>GLFW\lib;GLEW\lib;FreeImage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\glm\include;J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\include;J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\include;J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\include;$(IncludePath)</IncludePath>
+    <LibraryPath>J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLFW\lib;J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\GLEW\lib;J:\RIT\DSA\Homework\MXD2278Engine\MXD2278Engine\FreeImage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -165,6 +165,10 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fShader.glsl" />
+    <None Include="shaders\vShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

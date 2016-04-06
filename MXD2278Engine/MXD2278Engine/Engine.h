@@ -7,15 +7,14 @@
 #include <vector>
 #include "ShaderManager.h"
 #include "Model.h"
-#include "Texture.h"
 #include <map>
-#include <list>
 class Engine
 {
 private:
+	std::map<std::string, Model> models;
 	GLFWwindow* GLFWwindowPtr;
 	ShaderManager shaderManager;
-	Model sphere;
+	Model testModel;
 public:
 	//Attributes
 

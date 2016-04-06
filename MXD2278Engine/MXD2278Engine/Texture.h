@@ -6,12 +6,13 @@
 #include <FreeImage.h>
 #include <vector>
 #include "ShaderManager.h"
-#include "Model.h"
 class Texture
 {
 public:
 	GLuint texId;
-	GLuint loadTexture(char* );
+
+	GLuint loadTexture(char * texturePath);
+	Texture(char* );
 	Texture();
 	~Texture();
 };

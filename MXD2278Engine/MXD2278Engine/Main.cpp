@@ -2,7 +2,6 @@
 
 int main() {
 	Engine engine = Engine();
-
 	if (!engine.init())
 		return -1;
 

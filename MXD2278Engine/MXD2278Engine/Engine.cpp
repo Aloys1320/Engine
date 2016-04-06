@@ -18,17 +18,6 @@ bool Engine::gameLoop()
 	glfwSetMouseButtonCallback(GLFWwindowPtr, mouseClick);
 	glfwSetKeyCallback(GLFWwindowPtr, keyCallback);
 
-	//Create vector of texture reference
-	int textureIds = 0;
-	//texture map
-	std::map<int, GLuint> textures = std::map<int,GLuint>();
-	Texture textureLoader = Texture();
-	//Assign textures to map w/ coresponding reference
-	textures[0]=(textureLoader.loadTexture("textures/TestTexture.png"));
-	textures[1]=(textureLoader.loadTexture("textures/wall.jpg"));
-	textures[2]=(textureLoader.loadTexture("textures/dome.png"));
-	textures[3]=(textureLoader.loadTexture("textures/rain.png"));
-
 	//Game Loop
 	while (!glfwWindowShouldClose(GLFWwindowPtr)) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -41,16 +30,19 @@ bool Engine::gameLoop()
 		
 		//Detect mouse button 1 input (updates textures)
 		if (keyIsDown[GLFW_MOUSE_BUTTON_1] && !keyWasDown[GLFW_MOUSE_BUTTON_1]) {
-			textureIds++;
-			textureIds = textureIds % textures.size();
+			testModel.updateTexture();
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
-		glBindTexture(GL_TEXTURE_2D, textures[textureIds]);
-		sphere.render();
-		glBindVertexArray(0);
+		testModel.render();
+
+		for each (std::pair<std::string,Model> mod in models)
+		{
+			//std::cout<<mod.first<<std::endl;
+			//mod.second.render();
+		}
+
+		//Swap bufferes around to draw items on screen
 		glfwSwapBuffers(GLFWwindowPtr);
-
-
 		//Update old keypresses 
 		keyWasDown = keyIsDown;
 		//Get key updates
@@ -85,10 +77,27 @@ bool Engine::init()
 
 //Buffer the models using the modelclass.
 bool Engine::bufferModels()
-{	
-	if (sphere.buffer("models/sphere.obj"))
-		return true;
-	return false;
+{
+	//Attempt to buffer the test model
+	if (!(testModel.buffer("models/sphere.obj"))) {
+		std::cout << "Failed to buffer test model" << std::endl;
+		return false;
+	}
+	else { std::cout << "Loaded Test Model" << std::endl; }
+	//Buffer all models
+	for each (std::pair<std::string, Model> mod in models)
+	{
+		if (!mod.second.buffer(mod.second.getFilePath())){
+			std::cout << "Failed to load model: " << mod.first << std::endl;
+			return false;
+		}
+		else {
+			std::cout << "Loaded model: " << mod.first << std::endl;
+		}
+	}
+
+
+	return true;
 }
 
 //Uses the shadersthat are declared
@@ -103,6 +112,10 @@ bool Engine::useShaders()
 
 Engine::Engine()
 {
+	models = std::map<std::string, Model>();
+	models["box"] = Model("models/box.obj");
+
+
 }
 
 
