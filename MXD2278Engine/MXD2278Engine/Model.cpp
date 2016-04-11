@@ -6,18 +6,15 @@
 using std::ifstream;
 
 //Public Getter to return the models's path
-char * Model::getFilePath()
+std::string Model::getFilePath()
 {
 	return filePath;
 }
 
 //Method that instantiates the model. This should load all textures, open the model file and parse, and bind the coresponding vectors. false if fails.
 bool Model::buffer(std::string objFile) {
+
 	//Declare texture Files
-	textures[0] = (textureManager.loadTexture("textures/TestTexture.png"));
-	textures[1] = (textureManager.loadTexture("textures/wall.jpg"));
-	textures[2] = (textureManager.loadTexture("textures/dome.png"));
-	textures[3] = (textureManager.loadTexture("textures/rain.png"));
 
 	//Declare vectors
 	std::vector<glm::vec3> locs;
@@ -101,8 +98,8 @@ bool Model::buffer(std::string objFile) {
 //Basic render method that will render models with their textures, then unbind the textures.
 void Model::render()
 {
-	glBindTexture(GL_TEXTURE_2D, textures[textureIds]);
 	glBindVertexArray(vertArr);
+	glBindTexture(GL_TEXTURE_2D, textures[textureReference[textureIds]].texId);
 	glDrawArrays(GL_TRIANGLES, 0, vertCount);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -111,27 +108,48 @@ void Model::render()
 
 //Method to update which texture the model should show.
 void Model::updateTexture() {
+
 	std::cout << "Updating textures" << std::endl;
 	textureIds++;
+
+	//int lowest = INT_MAX;
+	//for (auto i : textures) {
+
+	//	if (abs(float(0 - i.second.texId)) < lowest)
+	//	lowest = i.second.texId;
+
+	//}
+
 	textureIds = textureIds % textures.size();
-	std::cout << "Now rendering model with texture: " << textures[textureIds] << std::endl;
+
+	std::cout << "Now rendering model with texture: " << textures[textureReference[textureIds]].texId << std::endl;
 
 }
+void Model::loadTexture(std::string textRefId,char* fileName) {
+	textureReference.push_back(textRefId); textures[textRefId] = (Texture(fileName));
+	//textureReference.push_back("wall"); textures["wall"] = (Texture("textures/wall.jpg"));
+	//textureReference.push_back("dome"); textures["dome"] = (Texture("textures/dome.png"));
+	//textureReference.push_back("rain"); textures["rain"] = (Texture("textures/rain.png"));
+
+}
+
+
+
 
 Model::Model()
 {
 	textureIds = 0;
-	textures = std::map<int, GLuint>();
-	textureManager = Texture();
+	textures = std::map<std::string , Texture>();
+	textureReference = std::vector<std::string>();
 	vertCount = 0;
 	vertArr = 0;
 }
 
-Model::Model(char * _filePath)
+Model::Model(std::string _filePath)
 {
 	textureIds = 0;
-	textures = std::map<int, GLuint>();
-	textureManager = Texture();
+	textures = std::map<std::string, Texture>();
+	textureReference = std::vector<std::string>();
 	vertCount = 0;
 	vertArr = 0;
 	filePath = _filePath;
@@ -142,6 +160,6 @@ Model::~Model()
 {
 	for (int i = 0; i < textures.size(); i++)
 	{
-		glDeleteTextures(1, &textures[i]);
+		glDeleteTextures(1, &textures[textureReference[textureIds]].texId);
 	}
 }
