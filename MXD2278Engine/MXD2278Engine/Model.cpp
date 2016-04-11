@@ -133,6 +133,9 @@ void Model::loadTexture(std::string textRefId,char* fileName) {
 
 }
 
+void Model::move()
+{}
+
 
 
 

@@ -24,6 +24,7 @@ public:
 	void render();
 	void updateTexture();
 	void loadTexture(std::string,char* );
+	void move();
 	Model();
 	Model(std::string filePath);
 	~Model();

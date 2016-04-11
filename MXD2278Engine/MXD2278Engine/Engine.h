@@ -9,11 +9,8 @@
 #include "ShaderManager.h"
 #include "Model.h"
 #include <map>
-
-struct GameObject {
-	Model model;
-	Transform transform;
-};
+#include "GameObject.h"
+#include "Camera.h"
 
 class Engine
 {
@@ -22,6 +19,11 @@ private:
 	GLFWwindow* GLFWwindowPtr;
 	ShaderManager shaderManager;
 	Model testModel;
+	float currentTime;
+	float previousTime;
+	float deltaTime;
+	glm::mat4 cameraLoc;
+	Camera mainCamera;
 public:
 	//Attributes
 

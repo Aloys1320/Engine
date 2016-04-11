@@ -1,6 +1,9 @@
 #include "Engine.h"
 #include <glm/gtx/transform.hpp>
 
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 namespace {
 	std::map<int, bool> keyIsDown;
 	std::map<int, bool> keyWasDown;
@@ -12,6 +15,7 @@ void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mod
 	keyIsDown[key] = action;
 }
 
+
 //Main Engine Loop
 bool Engine::gameLoop()
 {
@@ -20,6 +24,7 @@ bool Engine::gameLoop()
 	glfwSetMouseButtonCallback(GLFWwindowPtr, mouseClick);
 	glfwSetKeyCallback(GLFWwindowPtr, keyCallback);
 
+	//Set Textures for Game Objects
 	gameObjects["wall"].model.loadTexture("wall","textures/wall.jpg");
 	gameObjects["wall2"].model.loadTexture("wall", "textures/wall.jpg");
 	gameObjects["goal"].model.loadTexture("goal", "textures/goal.jpg");
@@ -27,25 +32,18 @@ bool Engine::gameLoop()
 	gameObjects["obs2"].model.loadTexture("spike", "textures/spike.jpg");
 	gameObjects["player"].model.loadTexture("player", "textures/mario.png");
 
-	glm::mat4 translate;
 
-	for (auto& mod : gameObjects)
-	{
-		translate = { 1, 0, 0, mod.second.transform.location.x,
-			0, 1, 0, mod.second.transform.location.y,
-			0, 0, 1, mod.second.transform.location.z,
-			0, 0, 0, 1 };
-		//std::cout<<mod.first<<std::endl;
-		mod.second.transform.worldTrans = glm::scale(mod.second.transform.worldTrans, mod.second.transform.size) *
-			glm::yawPitchRoll(mod.second.transform.rotation.y, mod.second.transform.rotation.x, mod.second.transform.rotation.z) * translate;
-		//glm::translate(mod.second.transform.location);
-	}
-
+	//Get GLFW Time
+	currentTime=glfwGetTime();
 	//Game Loop
 	while (!glfwWindowShouldClose(GLFWwindowPtr)) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-
+		//Update Times
+		previousTime = currentTime;
+		currentTime+=(((float)1)/60);
+		deltaTime = currentTime - previousTime;
 
 		//Escape exits program
 		if (keyIsDown[GLFW_KEY_ESCAPE])
@@ -61,25 +59,52 @@ bool Engine::gameLoop()
 			}
 
 		}
-		glClear(GL_COLOR_BUFFER_BIT);
+		if (keyIsDown[GLFW_KEY_D])
+			gameObjects["player"].rigidBody.velocityChange += glm::vec3(.125,0,0);
+		if(keyWasDown[GLFW_KEY_D]&&!keyIsDown[GLFW_KEY_D])
+			gameObjects["player"].rigidBody.velocityChange = glm::vec3(0, 0, 0);
 
-
-
-		//RENDER SECTION
-		//testModel.render();
-
-		GLint variable = glGetUniformLocation(shaderManager.getprogram(), "worldLoc");
-
+		//Update Section
 		for (auto& mod : gameObjects)
 		{
-			//std::cout<< <<std::endl;
-			//glUniformMatrix4fv(3, 1, GL_FALSE, &mod.second.transform.worldTrans[0][0]);
-			glProgramUniformMatrix4fv(shaderManager.getprogram(), variable, 1, GL_FALSE, &mod.second.transform.worldTrans[0][0]);
-			mod.second.model.render();
+			mod.second.updateModel(shaderManager.getprogram(),deltaTime);
 		}
+
+		//Camera Update
+
+	//Camera Movement
+		//Mouse Detection
+		float sens = .005;
+		int w = 800, h = 600;
+		double x, y;
+		glfwGetCursorPos(GLFWwindowPtr, &x, &y);
+		mainCamera.camTransform.rotation.y -= sens * (x - w * .5f); // Yaw
+		mainCamera.camTransform.rotation.x -= sens * (y - h * .5f); // Pitch
+		mainCamera.camTransform.rotation.x =
+			glm::clamp(mainCamera.camTransform.rotation.x, -.5f * 3.14f , .5f * 3.14f);
+		glfwSetCursorPos(GLFWwindowPtr, w * .5f, h * .5f);
+
+
+		//Key Detection for Camera
+		glm::vec3 camVel;
+		glm::mat3 R = (glm::mat3)glm::yawPitchRoll(mainCamera.camTransform.rotation.y, mainCamera.camTransform.rotation.x, mainCamera.camTransform.rotation.z);
+		if (keyIsDown[GLFW_KEY_LEFT])
+			camVel += R * glm::vec3(-1, 0, 0);
+		if (keyIsDown[GLFW_KEY_RIGHT])
+			camVel += R * glm::vec3(1, 0, 0);
+		if (keyIsDown[GLFW_KEY_UP])
+			camVel += R * glm::vec3(0, 0, -1);
+		if (keyIsDown[GLFW_KEY_DOWN])
+			camVel += R * glm::vec3(0, 0, 1);
+		float speed = 1.f;
+		if (camVel != glm::vec3())
+			camVel = glm::normalize(camVel) * speed;
+		mainCamera.camRigidBody.velocityChange = camVel;
+		mainCamera.updateCamera(shaderManager.getprogram(), deltaTime);
 
 		//Swap bufferes around to draw items on screen
 		glfwSwapBuffers(GLFWwindowPtr);
+
 		//Update old keypresses 
 		keyWasDown = keyIsDown;
 		//Get key updates
@@ -153,6 +178,8 @@ bool Engine::useShaders()
 
 Engine::Engine()
 {
+
+	//Declare Game Objects (class later?)
 	gameObjects = std::map<std::string, GameObject>();
 	gameObjects["wall"].model = Model("models/box.obj");
 	gameObjects["wall"].transform = {
@@ -161,12 +188,22 @@ Engine::Engine()
 		glm::vec3(2,.6,0),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
+	gameObjects["wall"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		0						//Mass
+	};
 	gameObjects["wall2"].model = Model("models/box.obj");
 	gameObjects["wall2"].transform = {
 		glm::vec3(0,-.7,0),		//Position
 		glm::vec3(0,0,0),		//Rotation
 		glm::vec3(2,.8,0),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
+	};
+	gameObjects["wall2"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		0						//Mass
 	};
 	gameObjects["goal"].model = Model("models/box.obj");
 	gameObjects["goal"].transform = {
@@ -175,12 +212,22 @@ Engine::Engine()
 		glm::vec3(.5,.5,1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
+	gameObjects["goal"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		0						//Mass
+	};
 	gameObjects["player"].model = Model("models/box.obj");
 	gameObjects["player"].transform = {
 		glm::vec3(-.8,0,0),		//Position
 		glm::vec3(0,0,0),		//Rotation
 		glm::vec3(.5,.5,1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
+	};
+	gameObjects["player"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		1						//Mass
 	};
 	gameObjects["obs"].model = Model("models/box.obj");
 	gameObjects["obs"].transform = {
@@ -189,6 +236,11 @@ Engine::Engine()
 		glm::vec3(.1,.1,.1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
+	gameObjects["obs"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		0						//Mass
+	};
 	gameObjects["obs2"].model = Model("models/box.obj");
 	gameObjects["obs2"].transform = {
 		glm::vec3(.3,.4,1),		//Position
@@ -196,7 +248,17 @@ Engine::Engine()
 		glm::vec3(.1,.1,.1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
-
+	gameObjects["obs2"].rigidBody = {
+		glm::vec3(0),			//Velocity
+		glm::vec3(0, 0, 0),		//Force
+		0						//Mass
+	};
+	cameraLoc = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
 }
 
 
