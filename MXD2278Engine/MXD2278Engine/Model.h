@@ -16,9 +16,10 @@ private:
 	unsigned int vertCount;
 	GLuint vertArr;
 	std::string filePath;
+
 public:
 	std::map <std::string, Texture> textures;
-
+	//GLuint shaderProg; //Shader that this model uses
 	std::string getFilePath();
 	bool buffer(std::string objFile);
 	void render();

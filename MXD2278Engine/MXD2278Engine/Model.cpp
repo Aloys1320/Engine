@@ -98,6 +98,9 @@ bool Model::buffer(std::string objFile) {
 //Basic render method that will render models with their textures, then unbind the textures.
 void Model::render()
 {
+	//glUseProgram(shaderProg); //Use this models shader 
+	///TODO: OPTIMIZE THIS SHADER DEAL
+
 	glBindVertexArray(vertArr);
 	glBindTexture(GL_TEXTURE_2D, textures[textureReference[textureIds]].texId);
 	glDrawArrays(GL_TRIANGLES, 0, vertCount);

@@ -63,6 +63,15 @@ bool Engine::gameLoop()
 		if (keyWasDown[GLFW_KEY_A] && !keyIsDown[GLFW_KEY_A])
 			gameObjects["player"].rigidBody.velocity = glm::vec3(0, 0, 0);
 
+
+		//Lighting
+		glm::vec3 lightLocation = glm::vec3( 4,2,5);
+		glUniform3fv(glGetUniformLocation(shaderManager.getprogram(), "lightLoc"), 1, &lightLocation[0]);
+		glUniform3fv(glGetUniformLocation(shaderManager.getprogram(), "camLoc"), 1, &mainCamera.camTransform.location[0]);
+
+
+
+
 		//Update Section
 		for (auto& mod : gameObjects)
 		{
@@ -175,6 +184,10 @@ bool Engine::useShaders()
 {
 	if (shaderManager.loadShaders("shaders/vShader.glsl", "shaders/fShader.glsl")) {
 		glUseProgram(shaderManager.getprogram());
+		/*for (auto& mod : gameObjects)
+		{
+			mod.second.model.shaderProg = shaderManager.getprogram();
+		}*/
 		return true;
 	}
 	return false;
