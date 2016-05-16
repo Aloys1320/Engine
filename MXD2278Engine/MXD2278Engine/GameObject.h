@@ -9,7 +9,7 @@ struct RigidBody {
 	float mass;
 	float maxSpeed;
 	glm::vec3 velocityChange;
-
+	bool usesGravity;
 };
 
 class GameObject
@@ -18,11 +18,14 @@ private:
 
 
 public:
+	enum colliders { colliderless, axisAlignedBoundingBox, sphere };
+	colliders collider;
 	Model model;
 	RigidBody rigidBody;
 	Transform transform;
 	void updateModel(GLuint program,float);
 	void moveModel(float);
+	bool collidesWith(const GameObject & other);
 	GameObject();
 	~GameObject();
 };

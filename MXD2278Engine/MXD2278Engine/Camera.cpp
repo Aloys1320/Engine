@@ -17,40 +17,22 @@ void Camera::updateCamera(GLuint program, float time)
 }
 
 void Camera::moveCamera(float time)
-{
+{	
+	camRigidBody.force -= camRigidBody.velocity * 1.0f;
+
 	//Calc Forces
-	camRigidBody.velocity += camRigidBody.velocityChange;
-	camRigidBody.force += (camRigidBody.velocity*camRigidBody.mass);
-
-	//Limit a Game Objects max speed (default max speed is .025)
-	//if (glm::length2(rigidBody.force)> rigidBody.maxSpeed) {
-	//	rigidBody.force = glm::normalize(rigidBody.force);
-	//	rigidBody.force *= rigidBody.maxSpeed;
-	//}
-	//rigidBody.force = glm::max(rigidBody.force, rigidBody.maxSpeed, rigidBody.maxSpeed);
-	//Update the objects location
-	camTransform.location += ((camRigidBody.force) * (time/7.5f));
-	if (camRigidBody.mass >= 1) {
-	//	std::cout << "x: " << camRigidBody.force.x << "y:" << camRigidBody.force.y << "z: " << camRigidBody.force.z << std::endl;
-	}
-
-	//Reset the applied force (doesnt reset the velocity, that will slowly dwindle down below)
+	camRigidBody.velocity += (camRigidBody.force*time) / camRigidBody.mass;
 	camRigidBody.force = glm::vec3(0);
+	camTransform.location += ((camRigidBody.velocity) * time);
 
-	//Apply Friction (x axis)
-	camRigidBody.velocity = camRigidBody.velocity * .9f;
-	std::cout << "CVx: " << camRigidBody.velocity.x << "CVy:" << camRigidBody.velocity.y << "CVz: " << camRigidBody.velocity.z << std::endl;
+
 
 	//Actual Movment
-	glm::mat4 translate;
-	translate = { 1, 0, 0, camTransform.location.x,
-		0, 1, 0, camTransform.location.y,
-		0, 0, 1, camTransform.location.z,
-		0, 0, 0, 1 };
+
 	camTransform.worldTrans =
-		glm::scale(transform.size) *
+		glm::translate(transform.location) *
 		glm::yawPitchRoll(camTransform.rotation.y, camTransform.rotation.x, camTransform.rotation.z) *
-		translate;
+		glm::scale(transform.size);
 
 }
 

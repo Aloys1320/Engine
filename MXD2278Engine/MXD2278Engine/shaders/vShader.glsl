@@ -11,7 +11,7 @@ void main()
 
 {
 fragUV = uv;
-vec4 worldLocVec = vec4(position,1) * worldLoc;
+vec4 worldLocVec = worldLoc * vec4(position,1);
 gl_Position = (cameraMat * worldLocVec);
 
 }

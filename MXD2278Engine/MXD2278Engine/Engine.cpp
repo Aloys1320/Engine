@@ -19,7 +19,9 @@ void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mod
 //Main Engine Loop
 bool Engine::gameLoop()
 {
+	glEnable(GL_DEPTH_TEST);
 
+	mainCamera.camTransform.location = glm::vec3(0, 0, 2);
 	//Use functions
 	glfwSetMouseButtonCallback(GLFWwindowPtr, mouseClick);
 	glfwSetKeyCallback(GLFWwindowPtr, keyCallback);
@@ -38,38 +40,40 @@ bool Engine::gameLoop()
 	//Game Loop
 	while (!glfwWindowShouldClose(GLFWwindowPtr)) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Update Times
 		previousTime = currentTime;
-		currentTime+=(((float)1)/60);
+		currentTime = glfwGetTime();
 		deltaTime = currentTime - previousTime;
 
 		//Escape exits program
 		if (keyIsDown[GLFW_KEY_ESCAPE])
 			glfwSetWindowShouldClose(GLFWwindowPtr, GL_TRUE);
 		
-		//Detect mouse button 1 input (updates textures)
-		if (keyIsDown[GLFW_MOUSE_BUTTON_1] && !keyWasDown[GLFW_MOUSE_BUTTON_1]) {
-			//testModel.updateTexture();
-			for (auto& mod : gameObjects)
-			{
-				//std::cout<<mod.first<<std::endl;
-				mod.second.model.updateTexture();
-			}
 
-		}
+		//Character Movement
 		if (keyIsDown[GLFW_KEY_D])
-			gameObjects["player"].rigidBody.velocityChange += glm::vec3(.125,0,0);
+			gameObjects["player"].rigidBody.force += glm::vec3(2,0,0);
 		if(keyWasDown[GLFW_KEY_D]&&!keyIsDown[GLFW_KEY_D])
-			gameObjects["player"].rigidBody.velocityChange = glm::vec3(0, 0, 0);
+			gameObjects["player"].rigidBody.velocity = glm::vec3(0, 0, 0);
+		if (keyIsDown[GLFW_KEY_A])
+			gameObjects["player"].rigidBody.force += glm::vec3(-2, 0, 0);
+		if (keyWasDown[GLFW_KEY_A] && !keyIsDown[GLFW_KEY_A])
+			gameObjects["player"].rigidBody.velocity = glm::vec3(0, 0, 0);
 
 		//Update Section
 		for (auto& mod : gameObjects)
 		{
 			mod.second.updateModel(shaderManager.getprogram(),deltaTime);
 		}
-
+		
+		//Collision check
+		if (gameObjects["player"].collidesWith(gameObjects["goal"])) {
+			std::cout << "Player has collided with the Goal" << std::endl;
+			gameObjects["player"].rigidBody.velocity = glm::vec3(0);
+		}
 		//Camera Update
 
 	//Camera Movement
@@ -89,17 +93,17 @@ bool Engine::gameLoop()
 		glm::vec3 camVel;
 		glm::mat3 R = (glm::mat3)glm::yawPitchRoll(mainCamera.camTransform.rotation.y, mainCamera.camTransform.rotation.x, mainCamera.camTransform.rotation.z);
 		if (keyIsDown[GLFW_KEY_LEFT])
-			camVel += R * glm::vec3(-1, 0, 0);
+			camVel += R * glm::vec3(-10, 0, 0);
 		if (keyIsDown[GLFW_KEY_RIGHT])
-			camVel += R * glm::vec3(1, 0, 0);
+			camVel += R * glm::vec3(10, 0, 0);
 		if (keyIsDown[GLFW_KEY_UP])
-			camVel += R * glm::vec3(0, 0, -1);
+			camVel += R * glm::vec3(0, 0, -10);
 		if (keyIsDown[GLFW_KEY_DOWN])
-			camVel += R * glm::vec3(0, 0, 1);
-		float speed = 1.f;
+			camVel += R * glm::vec3(0, 0, 10);
+		float speed = 10.f;
 		if (camVel != glm::vec3())
 			camVel = glm::normalize(camVel) * speed;
-		mainCamera.camRigidBody.velocityChange = camVel;
+		mainCamera.camRigidBody.force = camVel;
 		mainCamera.updateCamera(shaderManager.getprogram(), deltaTime);
 
 		//Swap bufferes around to draw items on screen
@@ -183,55 +187,63 @@ Engine::Engine()
 	gameObjects = std::map<std::string, GameObject>();
 	gameObjects["wall"].model = Model("models/box.obj");
 	gameObjects["wall"].transform = {
-		glm::vec3(0,.8, 0),		//Position
+		glm::vec3(0,1.3, 0),		//Position
 		glm::vec3(0,0,0),		//Rotation
-		glm::vec3(2,.6,0),		//Size
+		glm::vec3(2,.6,1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
 	gameObjects["wall"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		0						//Mass
+		1,						//Mass
+		false
 	};
 	gameObjects["wall2"].model = Model("models/box.obj");
 	gameObjects["wall2"].transform = {
-		glm::vec3(0,-.7,0),		//Position
+		glm::vec3(0,-1.4,0),		//Position
 		glm::vec3(0,0,0),		//Rotation
-		glm::vec3(2,.8,0),		//Size
+		glm::vec3(2,.8,1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
 	gameObjects["wall2"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		0						//Mass
+		1,						//Mass
+		false
 	};
-	gameObjects["goal"].model = Model("models/box.obj");
+	gameObjects["goal"].model = Model("models/quad.obj");
 	gameObjects["goal"].transform = {
-		glm::vec3(.8,0,0),		//Position
+		glm::vec3(1.8,0,0),		//Position
 		glm::vec3(0,0,0),		//Rotation
-		glm::vec3(.5,.5,1),		//Size
+		glm::vec3(.5f,.5f,.5f),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
 	gameObjects["goal"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		0						//Mass
+		1,						//Mass
+		true
 	};
-	gameObjects["player"].model = Model("models/box.obj");
+	gameObjects["goal"].collider = gameObjects["goal"].axisAlignedBoundingBox;
+
+	gameObjects["player"].model = Model("models/sphere.obj");
 	gameObjects["player"].transform = {
-		glm::vec3(-.8,0,0),		//Position
+		glm::vec3(-1.8,0,0),		//Position
 		glm::vec3(0,0,0),		//Rotation
-		glm::vec3(.5,.5,1),		//Size
+		glm::vec3(.5f,.5f,.5f),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
 	};
 	gameObjects["player"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		1						//Mass
+		1,						//Mass
+		true
 	};
+	gameObjects["player"].collider = gameObjects["player"].axisAlignedBoundingBox;
+
 	gameObjects["obs"].model = Model("models/box.obj");
 	gameObjects["obs"].transform = {
-		glm::vec3(-.4,.4,0),		//Position
+		glm::vec3(-.4,.4,1),		//Position
 		glm::vec3(0,0,0),		//Rotation
 		glm::vec3(.1,.1,.1),		//Size
 		glm::mat4(1)			//Transform Matrix (set later)
@@ -239,7 +251,8 @@ Engine::Engine()
 	gameObjects["obs"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		0						//Mass
+		1,						//Mass
+		false
 	};
 	gameObjects["obs2"].model = Model("models/box.obj");
 	gameObjects["obs2"].transform = {
@@ -251,14 +264,10 @@ Engine::Engine()
 	gameObjects["obs2"].rigidBody = {
 		glm::vec3(0),			//Velocity
 		glm::vec3(0, 0, 0),		//Force
-		0						//Mass
+		1,						//Mass
+		false
 	};
-	cameraLoc = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
+
 }
 
 
