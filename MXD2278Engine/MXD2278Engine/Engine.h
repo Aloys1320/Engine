@@ -19,6 +19,8 @@ private:
 	GLFWwindow* GLFWwindowPtr;
 	ShaderManager shaderManager;
 	Model testModel;
+	GameObject playButton;
+
 	float currentTime;
 	float previousTime;
 	float deltaTime;
