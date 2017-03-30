@@ -1,0 +1,13 @@
+Source
+	Engine
+		ModelManager
+		LightManager
+		ShaderManager
+		TextureManager
+		GAME
+			Actual game class with pointers to managers
+	Entity
+		Model Pointer
+		Texture Pointer
+		Shader Pointer
+		Draw Function
