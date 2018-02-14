@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 #include "ShaderManager.h"
+#include <glm/gtx/transform.hpp>
+#include "Camera.h"
 class Engine
 {
 private:
@@ -16,6 +18,7 @@ private:
 	float currentTime;
 	float previousTime;
 	float deltaTime;
+	Camera mainCamera;
 public:
 	int gameLoop();
 	int init();

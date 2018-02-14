@@ -1,0 +1,15 @@
+﻿  Texture.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\texture.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  ShaderManager.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\shadermanager.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  Model.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\model.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  Main.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\engine.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  GameObject.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\model.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  Engine.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\engine.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  Camera.cpp
+c:\users\matt\desktop\portfolio projects\engine\mxd2278engine\mxd2278engine\model.h(2): fatal error C1083: Cannot open include file: 'GL/glew.h': No such file or directory
+  Generating Code...

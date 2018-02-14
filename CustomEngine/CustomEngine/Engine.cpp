@@ -1,9 +1,10 @@
 #include "Engine.h"
-#include <glm/gtx/transform.hpp>
+
 
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+
 namespace {
 	std::map<int, bool> keyIsDown;
 	std::map<int, bool> keyWasDown;

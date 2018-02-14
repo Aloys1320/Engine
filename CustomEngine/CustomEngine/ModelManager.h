@@ -1,4 +1,6 @@
 #pragma once
+#include "Mesh.h"
+
 class ModelManager
 {
 public:
@@ -6,3 +8,6 @@ public:
 	~ModelManager();
 };
 
+struct Model {
+	Mesh modelMesh;
+};

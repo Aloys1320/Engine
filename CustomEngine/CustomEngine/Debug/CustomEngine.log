@@ -1,3 +1,8 @@
-﻿  ShaderManager.cpp
+﻿  Skipping... (no relevant changes detected)
+  Source.cpp
+  ShaderManager.cpp
+  Engine.cpp
+Engine.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   CustomEngine.vcxproj -> C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\Debug\CustomEngine.exe
   CustomEngine.vcxproj -> C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\Debug\CustomEngine.pdb (Full PDB)

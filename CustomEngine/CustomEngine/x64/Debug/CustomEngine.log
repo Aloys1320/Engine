@@ -1,0 +1,42 @@
+﻿  Source.cpp
+  ShaderManager.cpp
+  Shader.cpp
+  ModelManager.cpp
+  Engine.cpp
+c:\users\matt\desktop\portfolio projects\engine\customengine\customengine\engine.cpp(12): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\matt\desktop\portfolio projects\engine\customengine\customengine\engine.cpp(15): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\matt\desktop\portfolio projects\engine\customengine\customengine\engine.cpp(29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\matt\desktop\portfolio projects\engine\customengine\customengine\engine.cpp(37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\matt\desktop\portfolio projects\engine\customengine\customengine\engine.cpp(44): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating Code...
+Engine.obj : error LNK2019: unresolved external symbol __imp_glewInit referenced in function "public: int __cdecl Engine::init(void)" (?init@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwInit referenced in function "public: int __cdecl Engine::init(void)" (?init@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwCreateWindow referenced in function "public: int __cdecl Engine::init(void)" (?init@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwWindowShouldClose referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSetWindowShouldClose referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwPollEvents referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSetInputMode referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwGetCursorPos referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSetCursorPos referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSetKeyCallback referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSetMouseButtonCallback referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwGetTime referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function "public: int __cdecl Engine::init(void)" (?init@Engine@@QEAAHXZ)
+Engine.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function "public: int __cdecl Engine::gameLoop(void)" (?gameLoop@Engine@@QEAAHXZ)
+Engine.obj : error LNK2001: unresolved external symbol __imp___glewUseProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewDeleteShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramInfoLog
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramiv
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderInfoLog
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderiv
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\CustomEngine\\GLEW\lib\glew32.lib : warning LNK4272: library machine type 'X86' conflicts with target machine type 'x64'
+C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\CustomEngine\\GLFW\lib\glfw3.lib : warning LNK4272: library machine type 'X86' conflicts with target machine type 'x64'
+C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\CustomEngine\\FreeImage\lib\FreeImage.lib : warning LNK4272: library machine type 'X86' conflicts with target machine type 'x64'
+C:\Users\matt\Desktop\Portfolio Projects\Engine\CustomEngine\x64\Debug\CustomEngine.exe : fatal error LNK1120: 27 unresolved externals
